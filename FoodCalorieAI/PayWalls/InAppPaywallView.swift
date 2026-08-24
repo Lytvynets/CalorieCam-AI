@@ -104,37 +104,7 @@ struct InAppPaywallView: View {
         VStack {
             HStack {
                 Text("Start with a 3-day free trial")
-                    .font(.custom("Inter-SemiBold", size: AdaptiveFontSize.adaptive14))
-//                Spacer()
-//                Toggle("", isOn: $freeTrial)
-//                    .onChange(of: freeTrial) { newValue in
-//                        if newValue {
-//                            if inAppPurchaseViewModel.selectedProductId == AppDefaults.weekly {
-//                                inAppPurchaseViewModel.selectedProductId = AppDefaults.freeTrailWeekly
-//                            }
-//                            
-//                            if inAppPurchaseViewModel.selectedProductId == AppDefaults.monthly {
-//                                inAppPurchaseViewModel.selectedProductId = AppDefaults.freeTrailMonthly
-//                            }
-//                            
-//                            if inAppPurchaseViewModel.selectedProductId == AppDefaults.yearly {
-//                                inAppPurchaseViewModel.selectedProductId = AppDefaults.freeTrailYearly
-//                            }
-//                        }else{
-//                            if inAppPurchaseViewModel.selectedProductId == AppDefaults.freeTrailWeekly {
-//                                inAppPurchaseViewModel.selectedProductId = AppDefaults.weekly
-//                            }
-//                            
-//                            if inAppPurchaseViewModel.selectedProductId == AppDefaults.freeTrailMonthly {
-//                                inAppPurchaseViewModel.selectedProductId = AppDefaults.monthly
-//                            }
-//                            
-//                            if inAppPurchaseViewModel.selectedProductId == AppDefaults.freeTrailYearly {
-//                                inAppPurchaseViewModel.selectedProductId = AppDefaults.yearly
-//                            }
-//                        }
-//                    }
-                
+                    .font(.custom("Inter-SemiBold", size: AdaptiveFontSize.adaptive14))                
             }
             .frame(maxWidth: .infinity)
             .foregroundStyle(.white)

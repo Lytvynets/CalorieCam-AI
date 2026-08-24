@@ -78,25 +78,6 @@ struct CameraView: View {
         VStack {
             Spacer()
             HStack {
-                if #available(iOS 26.0, *) {
-                    Button {
-                        camera.toggleFlash()
-                    } label: {
-                        Image(systemName: camera.flashOn ? "bolt.fill" : "bolt.slash")
-                            .padding()
-                            .clipShape(.circle)
-                    }
-                    .buttonStyle(.glass)
-                } else {
-                    Button {
-                        camera.toggleFlash()
-                    } label: {
-                        Image(systemName: camera.flashOn ? "bolt.fill" : "bolt.slash")
-                            .padding()
-                            .clipShape(.circle)
-                    }
-                }
-                
                 Spacer()
                 
                 Button {
@@ -121,9 +102,8 @@ struct CameraView: View {
                 } label: {
                     Image("photo-ic")
                 }
-                
-                Spacer()
-                
+                .padding(.horizontal)
+                                
                 if #available(iOS 26.0, *) {
                     Button {
                         isShowingImagePicker = true
@@ -140,7 +120,6 @@ struct CameraView: View {
                         Image("hhgfdsdgas")
                             .padding()
                             .clipShape(.circle)
-                        
                     }
                 }
             }

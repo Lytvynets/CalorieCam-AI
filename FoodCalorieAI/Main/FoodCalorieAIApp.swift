@@ -150,14 +150,5 @@ struct FoodCalorieAIApp: App {
                 SettingsView()
             }
         }
-        .onChange(of: selectedTab) { newValue in
-            let lockedTabs: [Tabs] = [.diary, .profile]
-            if lockedTabs.contains(newValue) && !inAppPurchaseViewModel.isSubscribed {
-                onboardingViewModel.showPaywall = true
-                selectedTab = previousTab
-            } else {
-                previousTab = newValue
-            }
-        }
     }
 }

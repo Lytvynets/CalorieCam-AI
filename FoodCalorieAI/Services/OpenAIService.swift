@@ -69,17 +69,21 @@ class OpenAIService: ObservableObject {
     @Published var resultText = ""
     @Published var recommendationText = ""
     @Published var portionSize: PortionSize = .small
-    
+    @Published var showErrorAlert = false
+    @Published var errorText = "Error"
     
     private let apiKey = "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"
     
     
-    func analyzeFoodImage(_ image: UIImage, portionSize: PortionSize, completion: @escaping (String?) -> Void) {
+    func analyzeFoodImage(_ image: UIImage, portionSize: PortionSize, setExactValue: Bool, exactValue: Double, completion: @escaping (String?) -> Void) {
         guard let imageData = image.jpegData(compressionQuality: 0.8) else {
             completion("Не вдалося зчитати фото")
+            showErrorAlert = true
+            errorText = "Failed to read the photo. Make sure everything is clearly visible in the photo and try again."
             return
         }
         
+        let responseLanguage = UserDefaults.standard.string(forKey: "responseLanguages") ?? "English"
         let base64Image = imageData.base64EncodedString()
         let url = URL(string: "https://api.openai.com/v1/chat/completions")!
         var request = URLRequest(url: url)
@@ -88,7 +92,9 @@ class OpenAIService: ObservableObject {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         let prompt = """
-        You are a professional nutritionist. A user has sent a food photo and selected a portion size: \(portionSize.description).
+        You are a professional nutritionist. A user has sent a food photo and selected a portion size: \( setExactValue ? "\(exactValue)" : portionSize.description).
+        
+        Just translate the result that comes into "name" into the language: \(responseLanguage).
         
         1. Identify the food shown in the photo.
         2. Estimate approximate **calories**, **fat**, **protein**, and **carbs** based on the selected portion.
@@ -209,6 +215,10 @@ class OpenAIService: ObservableObject {
         }
         
         if (try? decoder.decode(FoodAnalysisError.self, from: contentData)) != nil {
+            DispatchQueue.main.async {
+                self.showErrorAlert = true
+                self.errorText = "Failed to read the photo. Make sure everything is clearly visible in the photo and try again."
+            }
             return .failure( FoodAnalysisErrorWrapper.custom("Could not decode AI response"))
         }
         
@@ -249,11 +259,15 @@ class OpenAIService: ObservableObject {
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 completion("Помилка: \(error.localizedDescription)")
+                self.showErrorAlert = true
+                self.errorText = "Failed to read the photo. Make sure everything is clearly visible in the photo and try again."
                 return
             }
             
             guard let data = data else {
                 completion("Дані не отримано")
+                self.showErrorAlert = true
+                self.errorText = "Failed to read the photo. Make sure everything is clearly visible in the photo and try again."
                 return
             }
             
@@ -270,6 +284,8 @@ class OpenAIService: ObservableObject {
                     completion("Не вдалося розпарсити відповідь")
                 }
             } catch {
+                self.showErrorAlert = true
+                self.errorText = "Failed to read the photo. Make sure everything is clearly visible in the photo and try again."
                 completion("JSON помилка: \(error.localizedDescription)")
             }
         }.resume()

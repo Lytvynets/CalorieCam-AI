@@ -14,37 +14,40 @@ class CameraManager: NSObject, ObservableObject {
     let session = AVCaptureSession()
     private let output = AVCapturePhotoOutput()
     private var device: AVCaptureDevice?
-    
+    private let sessionQueue = DispatchQueue(label: "camera.session.queue")
     private var completion: ((UIImage?) -> Void)?
+    private var isConfigured = false
     
     @Published var imageName = ""
     @Published var image: UIImage?
-    
     @Published var flashOn = false
     @Published var isLoading = false
-    
-    private var isConfigured = false
     
     
     func setup() {
         guard !isConfigured else { return }
         isConfigured = true
-        
         session.beginConfiguration()
-        
-        guard let camera = AVCaptureDevice.default(for: .video),
-              let input = try? AVCaptureDeviceInput(device: camera) else { return }
-        
+        session.sessionPreset = .photo
+
+        guard let camera = AVCaptureDevice.default(.builtInWideAngleCamera,
+                                                   for: .video,
+                                                   position: .back),
+              let input = try? AVCaptureDeviceInput(device: camera) else {
+            session.commitConfiguration()
+            return
+        }
+
         device = camera
-        
+
         if session.canAddInput(input) {
             session.addInput(input)
         }
-        
+
         if session.canAddOutput(output) {
             session.addOutput(output)
         }
-        
+
         session.commitConfiguration()
     }
     
@@ -53,28 +56,33 @@ class CameraManager: NSObject, ObservableObject {
         checkPermissionAndStart()
     }
     
+    
     func stop() {
         if session.isRunning {
             session.stopRunning()
         }
     }
     
+    
     func checkPermissionAndStart() {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
+
         case .authorized:
-            setup()
-            session.startRunning()
-            
+            sessionQueue.async {
+                self.setup()
+                self.session.startRunning()
+            }
+
         case .notDetermined:
             AVCaptureDevice.requestAccess(for: .video) { granted in
-                if granted {
-                    DispatchQueue.main.async {
-                        self.setup()
-                        self.session.startRunning()
-                    }
+                guard granted else { return }
+
+                self.sessionQueue.async {
+                    self.setup()
+                    self.session.startRunning()
                 }
             }
-            
+
         default:
             break
         }
@@ -82,14 +90,13 @@ class CameraManager: NSObject, ObservableObject {
     
     
     func takePhoto(completion: @escaping (UIImage?) -> Void) {
-        
         self.completion = completion
-        
         let settings = AVCapturePhotoSettings()
-        settings.flashMode = flashOn ? .on : .off
-        
+        if output.supportedFlashModes.contains(flashOn ? .on : .off) {
+            settings.flashMode = flashOn ? .on : .off
+        }
+
         output.capturePhoto(with: settings, delegate: self)
-        
     }
     
     
@@ -106,14 +113,19 @@ extension CameraManager: AVCapturePhotoCaptureDelegate {
         didFinishProcessingPhoto photo: AVCapturePhoto,
         error: Error?
     ) {
-        guard
-            let data = photo.fileDataRepresentation(),
-            let image = UIImage(data: data)
-        else {
+        if let error = error {
+            print("Photo error:", error)
             completion?(nil)
             return
         }
-        
+
+        guard let data = photo.fileDataRepresentation() else {
+            print("fileDataRepresentation() == nil")
+            completion?(nil)
+            return
+        }
+
+        let image = UIImage(data: data)
         completion?(image)
     }
 }

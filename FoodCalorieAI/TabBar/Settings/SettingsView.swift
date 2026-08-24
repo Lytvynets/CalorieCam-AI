@@ -17,26 +17,7 @@ struct SettingsView: View {
     var body: some View {
         ZStack {
             LiquidBackground()
-                .navigationBarTitleDisplayMode(.inline)
-                .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        Button {
-                            if !inAppPurchaseViewModel.isSubscribed {
-                                inAppPurchaseViewModel.showInAppPaywall = true
-                            }
-                        } label: {
-                            Image("akar-icons_crown")
-                                .resizable()
-                                .frame(width: 25, height: 25)
-                        }
-                        .clipShape(Circle())
-                        .padding(.trailing)
-                        .opacity(inAppPurchaseViewModel.isSubscribed ? 0 : 1)
-                        .disabled(inAppPurchaseViewModel.isSubscribed)
-                        .modifier(GlassButtonModifier())
-                    }
-                }
-            
+        
             header
             
             ScrollView {
@@ -293,8 +274,8 @@ struct SettingsView: View {
                     }
                 } label: {
                     Image("akar-icons_crown")
-                        .resizable()
-                        .frame(width: 25, height: 25)
+                       // .resizable()
+                        .frame(width: 22, height: 30)
                 }
                 .clipShape(Circle())
                 .padding(.trailing)
@@ -441,4 +422,7 @@ struct SettingsView: View {
 
 #Preview {
     SettingsView()
+        .environmentObject(Router())
+        .environmentObject(InAppPurchaseViewModel())
+        .environmentObject(SettingsViewModel())
 }

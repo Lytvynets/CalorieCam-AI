@@ -10,6 +10,7 @@ import SwiftUI
 struct ProfileView: View {
     
     @EnvironmentObject var profileViewModel: ProfileViewModel
+    @EnvironmentObject var inAppPurchaseViewModel: InAppPurchaseViewModel
     
     var body: some View {
         ZStack {
@@ -66,7 +67,12 @@ struct ProfileView: View {
                 Button {
                     let generator = UIImpactFeedbackGenerator(style: .medium)
                     generator.impactOccurred()
-                    profileViewModel.gender = .male
+                    
+                    if inAppPurchaseViewModel.isSubscribed {
+                        profileViewModel.gender = .male
+                    }else{
+                        inAppPurchaseViewModel.showInAppPaywall = true
+                    }
                 } label: {
                     HStack {
                         Image("material-symbols_male")
@@ -84,7 +90,12 @@ struct ProfileView: View {
                 Button {
                     let generator = UIImpactFeedbackGenerator(style: .medium)
                     generator.impactOccurred()
-                    profileViewModel.gender = .female
+                    
+                    if inAppPurchaseViewModel.isSubscribed {
+                        profileViewModel.gender = .female
+                    }else{
+                        inAppPurchaseViewModel.showInAppPaywall = true
+                    }
                 } label: {
                     HStack {
                         Image("material-symbols_female")
@@ -142,7 +153,6 @@ struct ProfileView: View {
                     .padding(.trailing, 35)
             }
             
-            
             HStack {
                 Text("Weight:")
                     .font(.custom("Inter-ExtraBold", size: AdaptiveFontSize.adaptive14))
@@ -179,8 +189,13 @@ struct ProfileView: View {
                 Button {
                     let generator = UIImpactFeedbackGenerator(style: .medium)
                     generator.impactOccurred()
-                    if profileViewModel.age < 100 {
-                        profileViewModel.age += 1
+                    
+                    if inAppPurchaseViewModel.isSubscribed {
+                        if profileViewModel.age < 100 {
+                            profileViewModel.age += 1
+                        }
+                    }else{
+                        inAppPurchaseViewModel.showInAppPaywall = true
                     }
                 } label: {
                     Image("ferfwergew")
@@ -191,8 +206,13 @@ struct ProfileView: View {
                 Button {
                     let generator = UIImpactFeedbackGenerator(style: .medium)
                     generator.impactOccurred()
-                    if profileViewModel.age > 0 {
-                        profileViewModel.age -= 1
+                    
+                    if inAppPurchaseViewModel.isSubscribed {
+                        if profileViewModel.age > 0 {
+                            profileViewModel.age -= 1
+                        }
+                    }else{
+                        inAppPurchaseViewModel.showInAppPaywall = true
                     }
                 } label: {
                     Image("gergewfwef")
@@ -221,8 +241,13 @@ struct ProfileView: View {
                 Button {
                     let generator = UIImpactFeedbackGenerator(style: .medium)
                     generator.impactOccurred()
-                    if profileViewModel.height < 300 {
-                        profileViewModel.height += 1
+                    
+                    if inAppPurchaseViewModel.isSubscribed {
+                        if profileViewModel.height < 300 {
+                            profileViewModel.height += 1
+                        }
+                    }else{
+                        inAppPurchaseViewModel.showInAppPaywall = true
                     }
                 } label: {
                     Image("ferfwergew")
@@ -233,8 +258,13 @@ struct ProfileView: View {
                 Button {
                     let generator = UIImpactFeedbackGenerator(style: .medium)
                     generator.impactOccurred()
-                    if profileViewModel.height > 0 {
-                        profileViewModel.height -= 1
+                    
+                    if inAppPurchaseViewModel.isSubscribed {
+                        if profileViewModel.height > 0 {
+                            profileViewModel.height -= 1
+                        }
+                    }else{
+                        inAppPurchaseViewModel.showInAppPaywall = true
                     }
                 } label: {
                     Image("gergewfwef")
@@ -263,9 +293,14 @@ struct ProfileView: View {
                 Button {
                     let generator = UIImpactFeedbackGenerator(style: .medium)
                     generator.impactOccurred()
-                    if profileViewModel.weight < 300 {
-                        profileViewModel.weight += 1
+                    if inAppPurchaseViewModel.isSubscribed {
+                        if profileViewModel.weight < 300 {
+                            profileViewModel.weight += 1
+                        }
+                    }else{
+                        inAppPurchaseViewModel.showInAppPaywall = true
                     }
+                    
                 } label: {
                     Image("ferfwergew")
                         .padding(.top, 6)
@@ -275,9 +310,14 @@ struct ProfileView: View {
                 Button {
                     let generator = UIImpactFeedbackGenerator(style: .medium)
                     generator.impactOccurred()
-                    if profileViewModel.weight > 0 {
-                        profileViewModel.weight -= 1
+                    if inAppPurchaseViewModel.isSubscribed {
+                        if profileViewModel.weight > 0 {
+                            profileViewModel.weight -= 1
+                        }
+                    }else{
+                        inAppPurchaseViewModel.showInAppPaywall = true
                     }
+                    
                 } label: {
                     Image("gergewfwef")
                         .padding(.bottom, 6)
@@ -309,7 +349,11 @@ struct ProfileView: View {
                 Button {
                     let generator = UIImpactFeedbackGenerator(style: .medium)
                     generator.impactOccurred()
-                    profileViewModel.activityLevel = 1.2
+                    if inAppPurchaseViewModel.isSubscribed {
+                        profileViewModel.activityLevel = 1.2
+                    }else{
+                        inAppPurchaseViewModel.showInAppPaywall = true
+                    }
                 } label: {
                     Text("Sedentary")
                         .font(.custom(profileViewModel.activityLevel == 1.2 ? "Inter-ExtraBold" : "Inter-Medium", size: AdaptiveFontSize.adaptive13))
@@ -323,7 +367,11 @@ struct ProfileView: View {
                 Button {
                     let generator = UIImpactFeedbackGenerator(style: .medium)
                     generator.impactOccurred()
-                    profileViewModel.activityLevel = 1.4
+                    if inAppPurchaseViewModel.isSubscribed {
+                        profileViewModel.activityLevel = 1.4
+                    }else{
+                        inAppPurchaseViewModel.showInAppPaywall = true
+                    }
                 } label: {
                     Text("Moderate")
                         .font(.custom(profileViewModel.activityLevel == 1.4 ? "Inter-ExtraBold" : "Inter-Medium", size: AdaptiveFontSize.adaptive13))
@@ -337,7 +385,11 @@ struct ProfileView: View {
                 Button {
                     let generator = UIImpactFeedbackGenerator(style: .medium)
                     generator.impactOccurred()
-                    profileViewModel.activityLevel = 1.6
+                    if inAppPurchaseViewModel.isSubscribed {
+                        profileViewModel.activityLevel = 1.6
+                    }else{
+                        inAppPurchaseViewModel.showInAppPaywall = true
+                    }
                 } label: {
                     Text("Active")
                         .font(.custom(profileViewModel.activityLevel == 1.6 ? "Inter-ExtraBold" : "Inter-Medium", size: AdaptiveFontSize.adaptive13))
@@ -374,7 +426,11 @@ struct ProfileView: View {
                 Button {
                     let generator = UIImpactFeedbackGenerator(style: .medium)
                     generator.impactOccurred()
-                    profileViewModel.goal = .loseWeight
+                    if inAppPurchaseViewModel.isSubscribed {
+                        profileViewModel.goal = .loseWeight
+                    }else{
+                        inAppPurchaseViewModel.showInAppPaywall = true
+                    }
                 } label: {
                     Text("Lose weight")
                         .font(.custom(profileViewModel.goal == .loseWeight ? "Inter-ExtraBold" : "Inter-Medium", size: AdaptiveFontSize.adaptive13))
@@ -388,7 +444,11 @@ struct ProfileView: View {
                 Button {
                     let generator = UIImpactFeedbackGenerator(style: .medium)
                     generator.impactOccurred()
-                    profileViewModel.goal = .maintainWeight
+                    if inAppPurchaseViewModel.isSubscribed {
+                        profileViewModel.goal = .maintainWeight
+                    }else{
+                        inAppPurchaseViewModel.showInAppPaywall = true
+                    }
                 } label: {
                     Text("Maintain")
                         .font(.custom(profileViewModel.goal == .maintainWeight ? "Inter-ExtraBold" : "Inter-Medium", size: AdaptiveFontSize.adaptive13))
@@ -402,7 +462,11 @@ struct ProfileView: View {
                 Button {
                     let generator = UIImpactFeedbackGenerator(style: .medium)
                     generator.impactOccurred()
-                    profileViewModel.goal = .gainWeight
+                    if inAppPurchaseViewModel.isSubscribed {
+                        profileViewModel.goal = .gainWeight
+                    }else{
+                        inAppPurchaseViewModel.showInAppPaywall = true
+                    }
                 } label: {
                     Text("Gain weight")
                         .font(.custom(profileViewModel.goal == .gainWeight ? "Inter-ExtraBold" : "Inter-Medium", size: AdaptiveFontSize.adaptive13))
@@ -427,7 +491,12 @@ struct ProfileView: View {
         Button {
             let generator = UIImpactFeedbackGenerator(style: .medium)
             generator.impactOccurred()
-            profileViewModel.dailyCalories = CalorieCalculator.calculateCalorieNeeds(weightKg: profileViewModel.weight, heightCm: profileViewModel.height, age: profileViewModel.age, gender: profileViewModel.gender, activityLevel: profileViewModel.activityLevel, goal: profileViewModel.goal)
+            
+            if inAppPurchaseViewModel.isSubscribed {
+                profileViewModel.dailyCalories = CalorieCalculator.calculateCalorieNeeds(weightKg: profileViewModel.weight, heightCm: profileViewModel.height, age: profileViewModel.age, gender: profileViewModel.gender, activityLevel: profileViewModel.activityLevel, goal: profileViewModel.goal)
+            }else{
+                inAppPurchaseViewModel.showInAppPaywall = true
+            }
         } label: {
             HStack {
                 Image("solar_calculator-linear")
@@ -448,4 +517,5 @@ struct ProfileView: View {
 #Preview {
     ProfileView()
         .environmentObject(ProfileViewModel())
+        .environmentObject(InAppPurchaseViewModel())
 }

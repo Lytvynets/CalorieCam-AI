@@ -57,8 +57,7 @@ struct ScanFoodView: View {
                     }
                 } label: {
                     Image("akar-icons_crown")
-                        .resizable()
-                        .frame(width: 25, height: 25)
+                        .frame(width: 22, height: 30)
                 }
                 .clipShape(Circle())
                 .padding(.trailing)
@@ -159,6 +158,7 @@ struct ScanFoodView: View {
     ScanFoodView()
         .environmentObject(Router())
         .environmentObject(InAppPurchaseViewModel())
+        .environmentObject(ProfileViewModel())
 }
 
 

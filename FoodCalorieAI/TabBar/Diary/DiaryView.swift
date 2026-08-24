@@ -9,6 +9,7 @@ import SwiftUI
 
 struct DiaryView: View {
     
+    @EnvironmentObject var inAppPurchaseViewModel: InAppPurchaseViewModel
     @EnvironmentObject var profileViewModel: ProfileViewModel
     @EnvironmentObject var diaryViewModel: DiaryViewModel
     @Environment(\.managedObjectContext) private var viewContext
@@ -128,11 +129,15 @@ struct DiaryView: View {
             Spacer()
             
             Button {
-                diaryViewModel.selectedImage = nil
-                diaryViewModel.newName = ""
-                diaryViewModel.newCalories = ""
-                withAnimation {
-                    diaryViewModel.showAddMealView = true
+                if inAppPurchaseViewModel.isSubscribed {
+                    diaryViewModel.selectedImage = nil
+                    diaryViewModel.newName = ""
+                    diaryViewModel.newCalories = ""
+                    withAnimation {
+                        diaryViewModel.showAddMealView = true
+                    }
+                }else{
+                    inAppPurchaseViewModel.showInAppPaywall = true
                 }
             } label: {
                 HStack {
